@@ -5,7 +5,7 @@ Build docker image for app:
 docker build -t image_name:image_tag .
 ```
 
-Pull image for database ㅡ PostgreSQL:
+Pull image for database PostgreSQL:
 ```
 docker pull postgres 
 ```
@@ -14,7 +14,7 @@ Running the postgres image:
 docker run --name postgresql -p 8080:5432 -e POSTGRES_PASSWORD=yourpass postgres
 ```
 
-Pull image for pgAdmin 4:
+Pull image for pgAdmin4:
 ```
 docker pull dpage/pgadmin4
 ```
