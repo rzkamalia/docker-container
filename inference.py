@@ -1,11 +1,15 @@
 from flask import Flask, render_template, request
 from werkzeug.utils import secure_filename
-import tensorflow as tf
 import numpy as np
+import cv2
 import os
 import datetime
+import torch
+import torchvision
 
+from googlenet import *
 from log import *
+from read_config import *
 
 app = Flask(__name__)
 
@@ -16,18 +20,27 @@ if not os.path.exists(upload_folder):
 
 app.config['UPLOAD'] = upload_folder
 
-class_names = ['2nd generation group', '1st generation group']
+class_names = ['1st generation group', '2nd generation group']
+
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu") 
+model = GoogleNet(num_classes = 2)
+weights = torch.load(weight)
+model.load_state_dict(weights)
+model.eval()
+model.to(device)
 
 def main(img):
     # process AI
-    model = tf.keras.models.load_model('model50epoch.h5')
-    img = tf.keras.utils.load_img(img)
-    img_array = tf.keras.utils.img_to_array(img)
-    img_array = tf.expand_dims(img_array, 0) # create a batch
-    pred = model.predict(img_array)
-    score = tf.nn.softmax(pred[0])
-    classes = class_names[np.argmax(score)]
-    confident = round(100 * np.max(score), 2)
+    img = cv2.imread(img)
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+    img = torchvision.transforms.ToTensor()(img)
+    img = img[None] # expand for batch dim
+    img = img.to(device)
+
+    outputs = model(img)
+    score = torch.nn.Softmax()(outputs)
+    classes = class_names[torch.argmax(score)]
+    confident = round(100 * torch.max(score).item(), 2)
     
     # time
     date_time = datetime.datetime.now()

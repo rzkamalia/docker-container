@@ -1,4 +1,5 @@
 from configparser import ConfigParser
+import os
 import psycopg2
 
 def config(filename = 'database.cfg', section = 'DATABASE'):
@@ -23,3 +24,12 @@ def connect():
     except:
         print('Not connected to the PostgreSQL database...')
     return conn
+
+BASE_DIR = os.path.dirname(os.path.realpath(__file__))
+filename_config = os.path.join(BASE_DIR, 'config.cfg')
+
+config_object = ConfigParser()
+config_object.read(filename_config)
+
+config_setting = config_object['SETTING']
+weight = config_setting['weight']

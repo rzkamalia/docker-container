@@ -1,0 +1,11 @@
+version: "3.9"
+
+services:
+  app:
+    image: app-docker-container:v.1.1
+    volumes:
+      - /home/${USER}/github/docker-container/running_docker/config.cfg:/app/config.cfg
+      - /home/${USER}/github/docker-container/running_docker/weights:/app/weights
+    ports:
+      - 5000:5000
+    container_name: app

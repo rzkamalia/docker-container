@@ -1,0 +1,7 @@
+*.pt
+Dockerfile
+config.cfg
+doc/
+static/
+weights/
+__pycache__

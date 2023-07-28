@@ -1,4 +1,4 @@
-from read_config import *
+from read_config import connect
 
 def create_table(database_name):
     conn = connect()
